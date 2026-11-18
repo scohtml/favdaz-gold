@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Demande d'information — Achat d'or</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0f0e0c; --panel:#17150f; --line:#2c281e; --text:#ece6d6; --muted:#a39b86;
+    --gold:#c9a24a; --gold-2:#e4c677; --err:#e07a5f; --ok:#7fb48a;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 Inter,system-ui,sans-serif}
+  .wrap{max-width:640px;margin:0 auto;padding:28px 18px 60px}
+  header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:22px}
+  h1{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;font-size:30px;line-height:1.15;margin:0;color:var(--gold-2)}
+  .sub{color:var(--muted);margin:8px 0 0;font-size:14px}
+  .lang{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;flex-shrink:0}
+  .lang button{background:none;border:0;color:var(--muted);padding:6px 10px;font:600 12px Inter;cursor:pointer}
+  .lang button.on{background:var(--gold);color:#16130b}
+  form{display:flex;flex-direction:column;gap:18px}
+  fieldset{border:1px solid var(--line);border-radius:12px;padding:16px 16px 6px;margin:0;background:var(--panel)}
+  legend{font:600 11px Inter;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);padding:0 6px}
+  .f{margin-bottom:14px}
+  label.l{display:block;font-weight:500;font-size:14px;margin-bottom:6px}
+  .req{color:var(--gold)}
+  .hint{color:var(--muted);font-size:12.5px;margin-top:4px}
+  input[type=text],input[type=email],input[type=tel],input[type=number],select,textarea{
+    width:100%;background:#0f0e0b;border:1px solid var(--line);border-radius:8px;color:var(--text);
+    padding:10px 12px;font:15px Inter;outline:none}
+  input:focus,select:focus,textarea:focus{border-color:var(--gold)}
+  textarea{min-height:84px;resize:vertical}
+  .row{display:grid;grid-template-columns:1fr 130px;gap:10px}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chips label{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:999px;padding:7px 13px;cursor:pointer;font-size:14px;user-select:none}
+  .chips input{accent-color:var(--gold);margin:0}
+  .chips label:has(input:checked){border-color:var(--gold);background:rgba(201,162,74,.12)}
+  .err{color:var(--err);font-size:12.5px;margin-top:5px;display:none}
+  .f.bad .err{display:block}
+  .f.bad input,.f.bad select{border-color:var(--err)}
+  .consent{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--muted)}
+  .consent input{accent-color:var(--gold);margin-top:3px}
+  .btn{display:inline-flex;justify-content:center;align-items:center;gap:8px;border:0;border-radius:10px;padding:13px 18px;font:600 15px Inter;cursor:pointer;text-decoration:none}
+  .btn.primary{background:var(--gold);color:#16130b;width:100%}
+  .btn.primary:hover{background:var(--gold-2)}
+  .btn.ghost{background:none;border:1px solid var(--line);color:var(--text)}
+  .hidden{display:none!important}
+  #done h2{font-family:"Cormorant Garamond",Georgia,serif;color:var(--gold-2);font-size:26px;margin:0 0 6px}
+  pre{white-space:pre-wrap;background:#0b0a08;border:1px solid var(--line);border-radius:10px;padding:14px;font:13px/1.55 ui-monospace,Menlo,monospace;color:#d9d2bf;margin:14px 0}
+  .actions{display:flex;flex-direction:column;gap:10px}
+  .contact-line{color:var(--muted);font-size:13px;margin-top:4px}
+  .note{color:var(--muted);font-size:12.5px;margin-top:14px}
+  .box{border:1px solid var(--gold);border-radius:12px;padding:12px 14px;margin:0 0 20px;background:rgba(201,162,74,.08);font-size:14px;line-height:1.45}
+  .box b{color:var(--gold-2)}
+  .unit{display:flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:8px;color:var(--muted);font-weight:600}
+  input[readonly]{opacity:.8}
+  .brand{font:600 12px Inter;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
+  .brand:empty{display:none}
+  footer{color:var(--muted);font-size:12px;text-align:center;margin-top:30px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div id="brand" class="brand"></div>
+      <h1 data-t="title">Demande d'information — Achat d'or</h1>
+    </div>
+    <div class="lang" role="group" aria-label="Langue">
+      <button type="button" data-lang="fr" class="on">FR</button>
+      <button type="button" data-lang="en">EN</button>
+    </div>
+  </header>
+
+  <div class="box"><b data-t="boxA">Or 24 carats · Cash and carry · Prix fixé à Londres (LBMA).</b> <span data-t="boxB">Filière contrôlée par les autorités locales, sous licence GoldBod (Ghana Gold Board).</span></div>
+
+  <form id="form" novalidate>
+    <div class="f" id="f-serie">
+      <label class="l" for="serie"><span data-t="serie">Numéro de référence</span> <span class="req">*</span></label>
+      <input type="text" id="serie" autocomplete="off" autocapitalize="characters" data-ph="seriePh" placeholder="Ex. MK-014">
+      <div class="hint" data-t="serieHint">Référence fournie par la personne qui vous a transmis ce formulaire.</div>
+      <div class="err" data-t="eSerie">Référence non reconnue. Vérifiez-la auprès de la personne qui vous a transmis ce formulaire.</div>
+    </div>
+    <fieldset>
+      <legend data-t="s1">Vous</legend>
+      <div class="f" id="f-nom">
+        <label class="l" for="nom"><span data-t="nom">Nom complet</span> <span class="req">*</span></label>
+        <input type="text" id="nom" autocomplete="name">
+        <div class="err" data-t="eNom">Indiquez votre nom.</div>
+      </div>
+      <div class="f">
+        <label class="l" for="fonction" data-t="fonction">Fonction / société</label>
+        <input type="text" id="fonction" autocomplete="organization-title">
+      </div>
+      <div class="f" id="f-pour">
+        <label class="l"><span data-t="pour">Je représente</span> <span class="req">*</span></label>
+        <div class="chips">
+          <label><input type="radio" name="pour" value="soi"><span data-t="pourSoi">Moi-même</span></label>
+          <label><input type="radio" name="pour" value="tiers"><span data-t="pourTiers">Un client (intermédiaire)</span></label>
+        </div>
+        <div class="err" data-t="eChoix">Faites un choix.</div>
+      </div>
+      <div class="f" id="f-profil">
+        <label class="l"><span data-t="profil">Votre profil</span> <span class="req">*</span></label>
+        <div class="chips">
+          <label><input type="radio" name="profil" value="revendeur"><span data-t="pRev">Revendeur</span></label>
+          <label><input type="radio" name="profil" value="investisseur"><span data-t="pInv">Investisseur</span></label>
+          <label><input type="radio" name="profil" value="bijoutier"><span data-t="pBij">Bijoutier / transformateur</span></label>
+          <label><input type="radio" name="profil" value="particulier"><span data-t="pPart">Particulier</span></label>
+          <label><input type="radio" name="profil" value="autre"><span data-t="pAutre">Autre</span></label>
+        </div>
+        <input type="text" id="profilAutre" class="hidden" style="margin-top:10px" data-ph="pAutrePh" placeholder="Précisez">
+        <div class="err" data-t="eChoix">Faites un choix.</div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend data-t="s2">Coordonnées</legend>
+      <div class="f" id="f-contact">
+        <label class="l" for="tel"><span data-t="tel">Téléphone / WhatsApp</span> <span class="req">*</span></label>
+        <input type="tel" id="tel" autocomplete="tel" placeholder="+33 6 … / +234 …">
+        <div class="err" data-t="eTel">Indiquez un numéro WhatsApp valide, avec l'indicatif du pays.</div>
+      </div>
+      <div class="f" id="f-contact2">
+        <label class="l" for="email"><span data-t="email">Email</span> <span class="req">*</span></label>
+        <input type="email" id="email" autocomplete="email">
+        <div class="err" data-t="eMail">Indiquez une adresse email valide.</div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend data-t="s3">Votre demande</legend>
+      <div class="f" id="f-objet">
+        <label class="l"><span data-t="objet">Je viens pour</span> <span class="req">*</span></label>
+        <div class="chips">
+          <label><input type="radio" name="objet" value="info"><span data-t="oInfo">Me renseigner</span></label>
+          <label><input type="radio" name="objet" value="achat"><span data-t="oAchat">Acheter</span></label>
+        </div>
+        <div class="err" data-t="eChoix">Faites un choix.</div>
+      </div>
+      <div class="f" id="f-qte">
+        <label class="l" for="qte"><span data-t="qte">Quantité souhaitée</span> <span class="req">*</span></label>
+        <div class="row">
+          <input type="number" id="qte" min="50" step="any" inputmode="decimal" value="50">
+          <div class="unit">kg</div>
+        </div>
+        <div class="hint" data-t="qteHint">Minimum 50 kg.</div>
+        <div class="err" data-t="eQte">La quantité minimum est de 50 kg.</div>
+      </div>
+      <div class="f" id="f-mode">
+        <label class="l"><span data-t="mode">Modalité souhaitée</span> <span class="req">*</span></label>
+        <div class="chips">
+          <label><input type="radio" name="mode" value="envoi"><span data-t="mEnvoi">Envoi international</span></label>
+          <label><input type="radio" name="mode" value="retrait"><span data-t="mRetrait">Je viens récupérer la marchandise moi-même</span></label>
+          <label><input type="radio" name="mode" value="bureau"><span data-t="mBureau">Je viens signer les accords dans un de vos bureaux</span></label>
+        </div>
+        <div class="err" data-t="eChoix">Faites un choix.</div>
+      </div>
+      <div class="f hidden" id="f-livraison">
+        <label class="l" for="livraison"><span data-t="livraison">Pays / ville de livraison</span> <span class="req">*</span></label>
+        <input type="text" id="livraison" data-ph="livraisonPh" placeholder="Ville, pays">
+        <div class="err" data-t="eLivraison">Indiquez le lieu de livraison.</div>
+      </div>
+      <div class="f hidden" id="f-bureau">
+        <label class="l"><span data-t="bureau">Bureau</span> <span class="req">*</span></label>
+        <div class="chips">
+          <label><input type="radio" name="bureau" value="Dubaï"><span data-t="bDubai">Dubaï</span></label>
+          <label><input type="radio" name="bureau" value="Accra"><span>Accra</span></label>
+          <label><input type="radio" name="bureau" value="Hong Kong"><span>Hong Kong</span></label>
+          <label><input type="radio" name="bureau" value="Paris"><span>Paris</span></label>
+          <label><input type="radio" name="bureau" value="Genève"><span data-t="bGeneve">Genève</span></label>
+        </div>
+        <div class="err" data-t="eChoix">Faites un choix.</div>
+      </div>
+      <div class="f">
+        <label class="l" for="devise" data-t="devise">Devise de paiement</label>
+        <select id="devise">
+          <option value="" data-t="choisir">— Choisir —</option>
+          <option>EUR (€)</option>
+          <option>USD ($)</option>
+          <option>NGN (₦)</option>
+          <option>XOF (FCFA)</option>
+          <option>GBP (£)</option>
+          <option>AED</option>
+          <option value="autre" data-t="autreDevise">Autre</option>
+        </select>
+      </div>
+    </fieldset>
+
+    <div class="f" id="f-consent">
+      <label class="consent"><input type="checkbox" id="consent"><span data-t="consent">J'accepte d'être recontacté(e) au sujet de cette demande. Mes informations ne servent qu'à y répondre.</span></label>
+      <div class="err" data-t="eConsent">Cochez cette case pour envoyer votre demande.</div>
+    </div>
+
+    <button type="submit" id="submitBtn" class="btn primary" data-t="submit">Envoyer ma demande</button>
+  </form>
+
+  <section id="sent" class="hidden" aria-live="polite">
+    <h2 data-t="sentTitle">Demande envoyée</h2>
+    <p class="sub"><span data-t="sentIntro">Votre demande a bien été transmise. Nous vous recontactons rapidement.</span> <span id="sentRef"></span></p>
+    <pre id="recapSent"></pre>
+    <div class="actions" id="sentActions"></div>
+  </section>
+
+  <section id="done" class="hidden" aria-live="polite">
+    <h2 data-t="doneTitle">L'envoi automatique n'a pas abouti</h2>
+    <p class="sub" data-t="doneIntro">Envoyez votre demande par l'un des moyens ci-dessous.</p>
+    <pre id="recap"></pre>
+    <div class="actions">
+      <div id="sendBtns" class="actions"></div>
+      <button id="copyBtn" type="button" class="btn ghost" data-t="copy">Copier la demande</button>
+      <button id="editBtn" type="button" class="btn ghost" data-t="edit">Modifier</button>
+    </div>
+    <p class="note" data-t="note">Si un bouton ne s'ouvre pas, copiez la demande et transmettez-la à la personne qui vous a envoyé ce formulaire.</p>
+  </section>
+
+  <footer id="foot"></footer>
+</div>
+
+<script>
+/* ===== À CONFIGURER ===== */
+const CONFIG = {
+  whatsapp: ["MzM3NDU3NjAzMTY="],   // encodé (base64) — numéro international
+  email: "b2NlYW5lQGZhdmRhemdyb3VwLmNvbQ==",   // destinataire principal (base64)
+  cc: "c2F6YXNjb0BnbWFpbC5jb20sYXpvbmFoYS5kb3NzYTc3QGdtYWlsLmNvbQ==",   // copies (base64)
+  // Envoi automatique (FormSubmit). Après activation, remplacer l'adresse par l'alias fourni par FormSubmit.
+  endpoint: "aHR0cHM6Ly9mb3Jtc3VibWl0LmNvL2FqYXgvb2NlYW5lQGZhdmRhemdyb3VwLmNvbQ==",
+  nomStructure: "Favdaz Gold"       // nom affiché en pied de page et dans le message
+};
+/* Références autorisées : empreinte -> libellé interne.
+   Les codes eux-mêmes ne figurent pas dans la page. Ajouter / révoquer = ajouter / retirer une ligne. */
+const REFS = {
+  "1m2yf1p6tkp": "",
+  "2cjbwitlacd": "",
+  "1ts9o0x6eis": "",
+  "skimu90jkp": "",
+  "29de3o0male": "",
+  "1u3o5ix7kvi": "",
+  "1phfksh1xm9": "",
+  "ehlcayq0w7": "",
+  "2fmgqd7kje5": "",
+  "1blxfy4858k": "",
+  "22f9uk6f0vo": "",
+  "1prhbg399ft": "",
+  "w47lva91p6": "",
+  "1p4z04jy8gq": "",
+  "1vsq4lhaiyr": "",
+  "21o1n5yv4pv": "",
+  "16zpokx3ag2": "",
+  "12jil7r6v72": "",
+  "fxc8bc20t6": "",
+  "14s8kxyi9ts": ""
+};
+/* ======================== */
+
+const T = {
+fr:{title:"Demande d'information — Achat d'or",
+boxA:"Or 24 carats · Cash and carry · Prix fixé à Londres (LBMA).",boxB:"Filière contrôlée par les autorités locales, sous licence GoldBod (Ghana Gold Board).",
+serie:"Numéro de référence",seriePh:"Ex. MK-014",serieHint:"Référence fournie par la personne qui vous a transmis ce formulaire.",eSerie:"Référence non reconnue. Vérifiez-la auprès de la personne qui vous a transmis ce formulaire.",
+qteHint:"Minimum 50 kg.",mode:"Modalité souhaitée",mEnvoi:"Envoi international",mRetrait:"Je viens récupérer la marchandise moi-même",mBureau:"Je viens signer les accords dans un de vos bureaux",
+bureau:"Bureau",bDubai:"Dubaï",bGeneve:"Genève",eLivraison:"Indiquez le lieu de livraison.",
+s1:"Vous",nom:"Nom complet",fonction:"Fonction / société",pour:"Je représente",pourSoi:"Moi-même",pourTiers:"Un client (intermédiaire)",
+profil:"Votre profil",pRev:"Revendeur",pInv:"Investisseur",pBij:"Bijoutier / transformateur",pPart:"Particulier",pAutre:"Autre",pAutrePh:"Précisez",
+s2:"Coordonnées",tel:"Téléphone / WhatsApp",email:"Email",
+s3:"Votre demande",objet:"Je viens pour",oInfo:"Me renseigner",oAchat:"Acheter",qte:"Quantité souhaitée",livraison:"Pays / ville de livraison",livraisonPh:"Ville, pays",
+devise:"Devise de paiement",choisir:"— Choisir —",autreDevise:"Autre",
+consent:"J'accepte d'être recontacté(e) au sujet de cette demande. Mes informations ne servent qu'à y répondre.",submit:"Envoyer ma demande",
+eNom:"Indiquez votre nom.",eChoix:"Faites un choix.",eTel:"Indiquez un numéro WhatsApp valide, avec l'indicatif du pays.",eMail:"Indiquez une adresse email valide.",eQte:"La quantité minimum est de 50 kg.",eConsent:"Cochez cette case pour envoyer votre demande.",
+doneTitle:"L'envoi automatique n'a pas abouti",doneIntro:"Envoyez votre demande par l'un des moyens ci-dessous.",sentTitle:"Demande envoyée",sentIntro:"Votre demande a bien été transmise. Nous vous recontactons rapidement.",sending:"Envoi en cours…",waOpt:"Nous écrire aussi sur WhatsApp (facultatif)",refLbl:"Référence",
+wa:"Envoyer par WhatsApp — contact {n}",wa1:"Envoyer par WhatsApp",mail:"Envoyer par email",gmail:"Envoyer via Gmail (navigateur)",opened:"ouvert",copy:"Copier la demande",copied:"Copié",edit:"Modifier",
+note:"Si un bouton ne s'ouvre pas, copiez la demande et transmettez-la à la personne qui vous a envoyé ce formulaire.",
+r:{head:"DEMANDE — OR",ref:"Réf.",date:"Date",serie:"N° de référence",mk:"Marketeur",nom:"Nom",fonction:"Fonction / société",pour:"Représente",profil:"Profil",tel:"Tél / WhatsApp",email:"Email",objet:"Objet",qte:"Quantité",mode:"Modalité",livraison:"Livraison",bureau:"Bureau",devise:"Devise"},
+v:{soi:"lui/elle-même",tiers:"un client (intermédiaire)",revendeur:"Revendeur",investisseur:"Investisseur",bijoutier:"Bijoutier / transformateur",particulier:"Particulier",autre:"Autre",info:"Information",achat:"Achat",envoi:"Envoi international",retrait:"Retrait sur place par le client",bureau:"Signature des accords au bureau"},
+subject:"Demande d'information — or"},
+en:{title:"Gold purchase — Enquiry form",
+boxA:"24-karat gold · Cash and carry · London fixing price (LBMA).",boxB:"Supply chain controlled by the local authorities, under GoldBod (Ghana Gold Board) licence.",
+serie:"Reference number",seriePh:"e.g. MK-014",serieHint:"Reference given by the person who sent you this form.",eSerie:"Reference not recognised. Please check it with the person who sent you this form.",
+qteHint:"Minimum 50 kg.",mode:"Preferred arrangement",mEnvoi:"International shipping",mRetrait:"I will collect the goods myself",mBureau:"I will sign the agreements at one of your offices",
+bureau:"Office",bDubai:"Dubai",bGeneve:"Geneva",eLivraison:"Please enter the delivery location.",
+s1:"About you",nom:"Full name",fonction:"Position / company",pour:"I represent",pourSoi:"Myself",pourTiers:"A client (intermediary)",
+profil:"Your profile",pRev:"Reseller",pInv:"Investor",pBij:"Jeweller / refiner",pPart:"Private buyer",pAutre:"Other",pAutrePh:"Please specify",
+s2:"Contact details",tel:"Phone / WhatsApp",email:"Email",
+s3:"Your request",objet:"I am here to",oInfo:"Get information",oAchat:"Buy",qte:"Quantity required",livraison:"Delivery country / city",livraisonPh:"City, country",
+devise:"Payment currency",choisir:"— Select —",autreDevise:"Other",
+consent:"I agree to be contacted about this request. My details are used only to answer it.",submit:"Send my request",
+eNom:"Please enter your name.",eChoix:"Please choose an option.",eTel:"Please enter a valid WhatsApp number, with country code.",eMail:"Please enter a valid email address.",eQte:"The minimum quantity is 50 kg.",eConsent:"Please tick this box to send your request.",
+doneTitle:"Automatic sending failed",doneIntro:"Please send your request using one of the options below.",sentTitle:"Request sent",sentIntro:"Your request has been received. We will contact you shortly.",sending:"Sending…",waOpt:"Also message us on WhatsApp (optional)",refLbl:"Reference",
+wa:"Send via WhatsApp — contact {n}",wa1:"Send via WhatsApp",mail:"Send by email",gmail:"Send via Gmail (browser)",opened:"opened",copy:"Copy request",copied:"Copied",edit:"Edit",
+note:"If a button does not open, copy the request and pass it to the person who sent you this form.",
+r:{head:"GOLD ENQUIRY",ref:"Ref.",date:"Date",serie:"Reference no.",mk:"Marketer",nom:"Name",fonction:"Position / company",pour:"Represents",profil:"Profile",tel:"Phone / WhatsApp",email:"Email",objet:"Purpose",qte:"Quantity",mode:"Arrangement",livraison:"Delivery",bureau:"Office",devise:"Currency"},
+v:{soi:"themselves",tiers:"a client (intermediary)",revendeur:"Reseller",investisseur:"Investor",bijoutier:"Jeweller / refiner",particulier:"Private buyer",autre:"Other",info:"Information",achat:"Purchase",envoi:"International shipping",retrait:"Collection by the client",bureau:"Signing at the office"},
+subject:"Gold enquiry"}
+};
+
+let lang = "fr";
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+
+function applyLang(l){
+  lang = l; document.documentElement.lang = l;
+  $$("[data-t]").forEach(el => { const k = el.dataset.t; if (T[l][k] != null) el.textContent = T[l][k]; });
+  $$("[data-ph]").forEach(el => el.placeholder = T[l][el.dataset.ph]);
+  $$(".lang button").forEach(b => b.classList.toggle("on", b.dataset.lang === l));
+  document.title = T[l].title;
+  if (!$("#done").classList.contains("hidden")) buildRecap();
+}
+$$(".lang button").forEach(b => b.addEventListener("click", () => applyLang(b.dataset.lang)));
+try { if ((navigator.language||"").toLowerCase().startsWith("en")) applyLang("en"); } catch(e){}
+
+$$("input[name=profil]").forEach(r => r.addEventListener("change", () => {
+  $("#profilAutre").classList.toggle("hidden", r.value !== "autre" || !r.checked);
+  if (r.value === "autre" && r.checked) $("#profilAutre").focus();
+}));
+
+$$("input[name=mode]").forEach(r => r.addEventListener("change", () => {
+  const m = radio("mode");
+  $("#f-livraison").classList.toggle("hidden", m !== "envoi");
+  $("#f-bureau").classList.toggle("hidden", m !== "bureau");
+}));
+function cyrb53(str, seed=0x4f52){let h1=0xdeadbeef^seed,h2=0x41c6ce57^seed;for(let i=0,ch;i<str.length;i++){ch=str.charCodeAt(i);h1=Math.imul(h1^ch,2654435761);h2=Math.imul(h2^ch,1597334677);}h1=Math.imul(h1^(h1>>>16),2246822507);h1^=Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507);h2^=Math.imul(h1^(h1>>>13),3266489909);return (4294967296*(2097151&h2)+(h1>>>0)).toString(36);}
+const normRef = s => (s||"").toUpperCase().replace(/\s+/g,"");
+const refName = s => { const k = cyrb53(normRef(s)); return Object.prototype.hasOwnProperty.call(REFS, k) ? REFS[k] : ""; };
+const refOk = s => { const n = normRef(s); return !!n && Object.prototype.hasOwnProperty.call(REFS, cyrb53(n)); };
+const dec = s => { try { return s ? atob(s) : ""; } catch(e){ return ""; } };
+function serialFromHash(){
+  let h = ""; try { h = decodeURIComponent((location.hash||"").slice(1)); } catch(e){}
+  h = normRef(h);
+  if (!h) return;
+  $("#serie").value = h;
+  if (refOk(h)) { $("#serie").readOnly = true; mark("f-serie", false); }
+  else { $("#serie").readOnly = false; mark("f-serie", true); }
+}
+const radio = n => (document.querySelector(`input[name=${n}]:checked`)||{}).value || "";
+const val = id => $("#"+id).value.trim();
+function mark(id, bad){ $("#"+id).classList.toggle("bad", bad); return bad; }
+serialFromHash();
+window.addEventListener("hashchange", serialFromHash);
+
+function validate(){
+  let bad = false;
+  bad = mark("f-serie", !refOk(val("serie"))) || bad;
+  bad = mark("f-nom", !val("nom")) || bad;
+  bad = mark("f-pour", !radio("pour")) || bad;
+  bad = mark("f-profil", !radio("profil")) || bad;
+  const tel = val("tel"), em = val("email");
+  const telOk = tel.replace(/\D/g,"").length >= 8;
+  const emOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em);
+  bad = mark("f-contact", !telOk) || bad;
+  bad = mark("f-contact2", !emOk) || bad;
+  bad = mark("f-objet", !radio("objet")) || bad;
+  bad = mark("f-qte", !(parseFloat(val("qte"))>=50)) || bad;
+  const m = radio("mode");
+  bad = mark("f-mode", !m) || bad;
+  bad = mark("f-livraison", m==="envoi" && !val("livraison")) || bad;
+  bad = mark("f-bureau", m==="bureau" && !radio("bureau")) || bad;
+  bad = mark("f-consent", !$("#consent").checked) || bad;
+  if (bad){ const first = $(".f.bad"); if (first) first.scrollIntoView({behavior:"smooth",block:"center"}); }
+  return !bad;
+}
+
+let ref = "";
+let recapText = "";
+let recapRows = [];
+function buildRecap(){
+  const R = T[lang].r, V = T[lang].v;
+  const d = new Date();
+  const p = radio("profil");
+  const m = radio("mode");
+  const dv = $("#devise"); const devise = dv.value ? dv.options[dv.selectedIndex].text : "";
+  const lines = [
+    `${R.head}${CONFIG.nomStructure ? " — " + CONFIG.nomStructure : ""}`,
+    `${R.ref} ${ref} · ${R.date} ${d.toLocaleDateString(lang==="fr"?"fr-FR":"en-GB")}`,
+    "",
+    [R.serie, normRef(val("serie"))],
+    [R.mk, refName(val("serie"))],
+    [R.nom, val("nom")],
+    [R.fonction, val("fonction")],
+    [R.pour, V[radio("pour")]],
+    [R.profil, p==="autre" ? (V.autre + (val("profilAutre") ? " : " + val("profilAutre") : "")) : V[p]],
+    [R.tel, val("tel")],
+    [R.email, val("email")],
+    [R.objet, V[radio("objet")]],
+    [R.qte, val("qte") ? `${val("qte")} kg` : ""],
+    [R.mode, V[m]],
+    [R.livraison, m==="envoi" ? val("livraison") : ""],
+    [R.bureau, m==="bureau" ? (lang==="en" ? ({"Dubaï":"Dubai","Genève":"Geneva"}[radio("bureau")]||radio("bureau")) : radio("bureau")) : ""],
+    [R.devise, devise]
+  ];
+  recapRows = lines.filter(l => typeof l !== "string" && l[1]);
+  recapText = lines.filter(l => typeof l === "string" || l[1]).map(l => typeof l === "string" ? l : `${l[0]} : ${l[1]}`).join("\n");
+  $("#recap").textContent = recapText;
+
+  const targets = [];
+  (CONFIG.whatsapp||[]).map(dec).map(x => x.replace(/\D/g,"")).filter(Boolean).forEach((num,i) =>
+    targets.push({id:"wa"+i, label:(CONFIG.whatsapp.length > 1 ? T[lang].wa.replace("{n}", i+1) : T[lang].wa1), href:`https://wa.me/${num}?text=${encodeURIComponent(recapText)}`, blank:true}));
+  const addr = dec(CONFIG.email);
+  const cc = dec(CONFIG.cc);
+  const subj = T[lang].subject + " — " + ref;
+  if (addr){
+    targets.push({id:"mail", label:T[lang].mail, href:`mailto:${addr}?${cc ? "cc=" + encodeURIComponent(cc) + "&" : ""}subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(recapText)}`, blank:true});
+  }
+  const box = $("#sendBtns"); box.innerHTML = "";
+  const done = id => opened.has(id) || ((id==="mail"||id==="gmail") && (opened.has("mail")||opened.has("gmail")));
+  const next = targets.find(t => !done(t.id));
+  targets.forEach(t => {
+    const a = document.createElement("a");
+    a.className = "btn " + (next && t.id === next.id ? "primary" : "ghost");
+    a.href = t.href; if (t.blank){ a.target = "_blank"; a.rel = "noopener"; }
+    a.textContent = t.label + (opened.has(t.id) ? " (" + T[lang].opened + ")" : "");
+    a.addEventListener("click", () => { opened.add(t.id); setTimeout(buildRecap, 300); });
+    box.appendChild(a);
+  });
+}
+const opened = new Set();
+
+$("#form").addEventListener("submit", e => {
+  e.preventDefault();
+  if (!validate()) return;
+  const d = new Date();
+  ref = "OR-" + d.getFullYear().toString().slice(2) + String(d.getMonth()+1).padStart(2,"0") + String(d.getDate()).padStart(2,"0") + "-" + Math.random().toString(36).slice(2,6).toUpperCase();
+  opened.clear();
+  buildRecap();
+  sendAuto();
+});
+
+async function sendAuto(){
+  const btn = $("#submitBtn"); btn.disabled = true; btn.textContent = T[lang].sending;
+  const payload = {};
+  const ui = lang; lang = "fr"; buildRecap(); const rowsFr = recapRows.slice(); lang = ui; buildRecap();
+  rowsFr.forEach(([k,v]) => payload[k] = v);
+  payload["Référence demande"] = ref;
+  payload["Langue du client"] = ui.toUpperCase();
+  payload._subject = T.fr.subject + " — " + ref + (refName(val("serie")) ? " — " + refName(val("serie")) : "");
+  payload._cc = dec(CONFIG.cc);
+  payload._template = "table";
+  payload._captcha = "false";
+  payload._replyto = val("email");
+  let ok = false;
+  try {
+    const ctrl = new AbortController(); const timer = setTimeout(() => ctrl.abort(), 15000);
+    const r = await fetch(dec(CONFIG.endpoint), {method:"POST", headers:{"Content-Type":"application/json","Accept":"application/json"}, body:JSON.stringify(payload), signal:ctrl.signal});
+    clearTimeout(timer);
+    const j = await r.json().catch(() => ({}));
+    ok = r.ok && String(j.success) !== "false";
+  } catch(e){ ok = false; }
+  btn.disabled = false; btn.textContent = T[lang].submit;
+  $("#form").classList.add("hidden");
+  if (ok){
+    $("#sentRef").textContent = T[lang].refLbl + " : " + ref;
+    $("#recapSent").textContent = recapText;
+    const box = $("#sentActions"); box.innerHTML = "";
+    const num = (CONFIG.whatsapp||[]).map(dec)[0];
+    if (num){ const a = document.createElement("a"); a.className = "btn ghost"; a.target = "_blank"; a.rel = "noopener";
+      a.href = `https://wa.me/${num.replace(/\D/g,"")}?text=${encodeURIComponent(recapText)}`; a.textContent = T[lang].waOpt; box.appendChild(a); }
+    $("#sent").classList.remove("hidden");
+  } else {
+    $("#done").classList.remove("hidden");
+  }
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+$("#editBtn").addEventListener("click", () => { $("#done").classList.add("hidden"); $("#form").classList.remove("hidden"); });
+$("#copyBtn").addEventListener("click", async () => {
+  try { await navigator.clipboard.writeText(recapText); const b=$("#copyBtn"); b.textContent=T[lang].copied; setTimeout(()=>b.textContent=T[lang].copy,1600); }
+  catch(e){ const r=document.createRange(); r.selectNodeContents($("#recap")); const s=getSelection(); s.removeAllRanges(); s.addRange(r); }
+});
+$$("input,select,textarea").forEach(el => el.addEventListener("input", () => { const f = el.closest(".f"); if (f && f.classList.contains("bad")) validate(); }));
+if (CONFIG.nomStructure){ $("#foot").textContent = CONFIG.nomStructure; $("#brand").textContent = CONFIG.nomStructure; }
+</script>
+</body>
+</html>
