@@ -213,6 +213,7 @@
       <button id="copyBtn" type="button" class="btn ghost" data-t="copy">Copier la demande</button>
       <button id="editBtn" type="button" class="btn ghost" data-t="edit">Modifier</button>
     </div>
+    <p class="note" id="why"></p>
     <p class="note" data-t="note">Si un bouton ne s'ouvre pas, copiez la demande et transmettez-la à la personne qui vous a envoyé ce formulaire.</p>
   </section>
 
@@ -436,15 +437,19 @@ async function sendAuto(){
   payload._cc = dec(CONFIG.cc);
   payload._template = "table";
   payload._captcha = "false";
-  payload._replyto = val("email");
-  let ok = false;
+  payload._replyto = dec(CONFIG.email);
+  let ok = false, why = "";
   try {
-    const ctrl = new AbortController(); const timer = setTimeout(() => ctrl.abort(), 15000);
+    const ctrl = new AbortController(); const timer = setTimeout(() => ctrl.abort(), 45000);
     const r = await fetch(dec(CONFIG.endpoint), {method:"POST", headers:{"Content-Type":"application/json","Accept":"application/json"}, body:JSON.stringify(payload), signal:ctrl.signal});
     clearTimeout(timer);
-    const j = await r.json().catch(() => ({}));
-    ok = r.ok && String(j.success) !== "false";
-  } catch(e){ ok = false; }
+    const txt = await r.text().catch(() => "");
+    let j = {}; try { j = JSON.parse(txt); } catch(e){}
+    if (!r.ok) why = "HTTP " + r.status + (j.message ? " — " + j.message : "");
+    else if (String(j.success) === "false") why = "FormSubmit — " + (j.message || "refus sans message");
+    else ok = true;
+  } catch(e){ why = (e && e.name === "AbortError") ? "délai dépassé (45 s)" : "réseau — " + ((e && e.message) || "erreur inconnue"); }
+  $("#why").textContent = why ? "Détail technique : " + why : "";
   btn.disabled = false; btn.textContent = T[lang].submit;
   $("#form").classList.add("hidden");
   if (ok){
