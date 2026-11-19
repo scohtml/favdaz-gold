@@ -437,7 +437,7 @@ async function sendAuto(){
   payload._cc = dec(CONFIG.cc);
   payload._template = "table";
   payload._captcha = "false";
-  payload._replyto = dec(CONFIG.email);
+  payload._replyto = val("email");
   let ok = false, why = "";
   try {
     const ctrl = new AbortController(); const timer = setTimeout(() => ctrl.abort(), 45000);
