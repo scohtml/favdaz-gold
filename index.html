@@ -58,6 +58,7 @@
   input[readonly]{opacity:.8}
   .brand{font:600 12px Inter;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
   .brand:empty{display:none}
+  #sent h2{display:inline-block;padding:10px 22px;border-radius:12px;color:#c9f3e9;background:rgba(150,224,206,.14);border:1px solid #96e0ce;box-shadow:0 0 0 3px rgba(150,224,206,.12),0 0 22px rgba(150,224,206,.35);margin-bottom:14px}
   footer{color:var(--muted);font-size:12px;text-align:center;margin-top:30px}
 </style>
 </head>
@@ -457,8 +458,8 @@ async function sendAuto(){
     $("#recapSent").textContent = recapText;
     const box = $("#sentActions"); box.innerHTML = "";
     const num = (CONFIG.whatsapp||[]).map(dec)[0];
-    if (num){ const a = document.createElement("a"); a.className = "btn ghost"; a.target = "_blank"; a.rel = "noopener";
-      a.href = `https://wa.me/${num.replace(/\D/g,"")}?text=${encodeURIComponent(recapText)}`; a.textContent = T[lang].waOpt; box.appendChild(a); }
+    if (num){ const a = document.createElement("a"); a.className = "btn primary"; a.target = "_blank"; a.rel = "noopener";
+      a.href = `https://wa.me/${num.replace(/\D/g,"")}?text=${encodeURIComponent(recapText)}`; a.textContent = T[lang].wa1; box.appendChild(a); }
     $("#sent").classList.remove("hidden");
   } else {
     $("#done").classList.remove("hidden");
